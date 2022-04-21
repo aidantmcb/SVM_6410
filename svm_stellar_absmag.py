@@ -46,44 +46,73 @@ sampsize = 10000
 samp = np.random.choice(len(ind), size = sampsize)
 sample_indices = ind[samp]
 
-model = Pipeline([('scaler', StandardScaler()), ('SVC', SVC(kernel = 'rbf', probability = False,
-            class_weight ={0: 1, 1: 2}))])
-model.fit(X_train[sample_indices,:], y_train[sample_indices])
+yso_weights = np.arange(0.1, 5, 0.1)
 
-fname = 'model.pickle'
-pickle.dump(model, open(fname, 'wb'))
+truepos_yso = np.zeros(len(yso_weights))
+falsepos_yso = np.zeros(len(yso_weights))
+truepos_old = np.zeros(len(yso_weights))
+falsepos_old = np.zeros(len(yso_weights))
 
-# model = pickle.load(open(fname, 'rb'))
+from matplotlib.backends.backend_pdf import PdfPages
+# with PdfPages('Plots/Models_Confusion.pdf') as pdf:
+with np.errstate(divide = 'ignore'):
+    for i in range(len(yso_weights)):
+        weight = yso_weights[i]
+        print('Weight:', weight)
+        # model = Pipeline([('scaler', StandardScaler()), ('SVC', SVC(kernel = 'rbf', probability = False,
+        #             class_weight ={0: 1, 1: weight}))])
+        # model.fit(X_train[sample_indices,:], y_train[sample_indices])
 
-X_test = X[test, :]
-y_test = y[test]
+        fname = 'Models/model_w{}.pickle'.format(str(round(weight, 1)))
+        # pickle.dump(model, open(fname, 'wb'))
 
-y_predict = model.predict(X_test)
+        model = pickle.load(open(fname, 'rb'))
 
-yso = X_test[np.where(y_predict >= 0.9)[0], :]
-ms = X_test[np.where(y_predict < 0.9)[0]]
+        X_test = X[test, :]
+        y_test = y[test]
 
-yso_real = X_test[np.where(y_test == 1)[0], :]
-ms_real = X_test[np.where(y_test == 0)[0], :]
-print('PREDICTED YSO FRAC:', len(yso)/len(ms))
-print('REAL YSO FRAC:', len(yso_real) / len(ms_real))
 
-fig, ax = plt.subplots(figsize = (8,6))
-ax.scatter(ms[:, 1] - ms[:, 2], ms[:,0], c = 'grey', alpha = 0.5)
-ax.scatter(yso[:, 1] - yso[:, 2], yso[:,0], c = 'k', alpha = 0.5 )
-ymin, ymax = ax.get_ylim()
-ax.set_ylim(ymax, ymin)
-plt.show()
+        y_predict = model.predict(X_test)
 
-fig, ax = plt.subplots(figsize = (8,6))
+        yso = X_test[np.where(y_predict >= 0.9)[0], :]
+        ms = X_test[np.where(y_predict < 0.9)[0]]
 
-ax.scatter(ms_real[:, 1] - ms_real[:, 2], ms_real[:,0], c = 'grey', alpha = 0.5)
-ax.scatter(yso_real[:, 1] - yso_real[:, 2], yso_real[:,0], c = 'k', alpha = 0.5 )
-ymin, ymax = ax.get_ylim()
-ax.set_ylim(ymax, ymin)
-plt.show()
+        yso_real = X_test[np.where(y_test == 1)[0], :]
+        ms_real = X_test[np.where(y_test == 0)[0], :]
+        print('PREDICTED YSO FRAC:', len(yso)/len(ms))
+        print('REAL YSO FRAC:', len(yso_real) / len(ms_real))
 
-cm = confusion_matrix(y_test, y_predict, normalize = 'pred')
-disp = ConfusionMatrixDisplay(cm, display_labels = model.classes_)
-disp.plot()
-plt.show()
+
+        # fig, ax = plt.subplots(figsize = (8,6))
+        # ax.scatter(ms[:, 1] - ms[:, 2], ms[:,0], c = 'grey', alpha = 0.5)
+        # ax.scatter(yso[:, 1] - yso[:, 2], yso[:,0], c = 'k', alpha = 0.5 )
+        # ymin, ymax = ax.get_ylim()
+        # ax.set_ylim(ymax, ymin)
+        # plt.show()
+
+        # fig, ax = plt.subplots(figsize = (8,6))
+
+        # ax.scatter(ms_real[:, 1] - ms_real[:, 2], ms_real[:,0], c = 'grey', alpha = 0.5)
+        # ax.scatter(yso_real[:, 1] - yso_real[:, 2], yso_real[:,0], c = 'k', alpha = 0.5 )
+        # ymin, ymax = ax.get_ylim()
+        # ax.set_ylim(ymax, ymin)
+        # plt.show()
+
+
+        cm = confusion_matrix(y_test, y_predict)#, normalize = 'pred')
+        # disp = ConfusionMatrixDisplay(cm, display_labels = ['NOT PMS', 'PMS'])
+        # disp.plot()
+        # ax = disp.ax_
+        # fig = disp.figure_
+
+        # ax.set_title('Weight: ' + str(weight))
+        # pdf.savefig(fig)
+        # plt.close()
+
+        truepos_old[i] = cm[0, 0]
+        falsepos_old[i] = cm[1, 0]
+        falsepos_yso[i] = cm[0, 1]
+        truepos_yso[i] = cm[1, 1]
+
+true_false = np.array([truepos_old, falsepos_old, truepos_yso, falsepos_yso])
+pickle.dump(true_false, open('truefalse.pickle', 'wb'))
