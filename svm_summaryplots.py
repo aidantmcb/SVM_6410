@@ -55,8 +55,14 @@ plt.savefig(modeldir + '/Plots/TpFpRates.png') if save_figs else None
 plt.show()
 
 selectmod = 0.8
-precision = true_p / (true_p + false_p)
-recall = true_p / (true_p + false_n)
+
+
+
+
+precision = true_p / (true_p + false_p) # What proportion of retrieved items are relevant?
+recall = true_p / (true_p + false_n) # What proportion of relevant items are retrieved?
+falsepositive = false_p / (true_p + false_p) # What proportion of items are falsely retrieved?
+
 fig, axs = plt.subplots(2,1, sharex = True, gridspec_kw={'height_ratios':[2,1]})
 axs[0].plot(yso_weights, precision, label = r'Precision $\frac{T_p}{T_p + F_p}$', color = 'r')
 axs[0].plot(yso_weights, recall, label = r'Recall $\frac{T_p}{T_p + F_n}$', color = 'g')
@@ -76,13 +82,21 @@ plt.savefig(modeldir + '/Plots/PR_Classified.png') if save_figs else None
 plt.show()
 
 
+
+
 fig, ax = plt.subplots(figsize = (8,6))
-points = ax.scatter(false_p / (true_p + false_p) * 100 , true_p / len(true_test) * 100, c = yso_weights)
+points = ax.scatter(falsepositive * 100 , recall * 100, c = yso_weights)
 ax.set_xlabel('% Contamination')
 ax.set_ylabel('% YSOs Recovered')
 xmin, xmax = ax.get_xlim()
-ax.set_xlim(xmin, np.nanpercentile(false_p / (true_p + false_p) * 100, 95) + 6)
+ax.set_xlim(xmin, np.nanpercentile(falsepositive * 100, 95) + 6)
 # print(np.sort(false_p / (true_p + false_p) * 100))
 fig.colorbar(points, label = 'Model PMS Weight')
+
+# critera = (100 * recall) / ( 100 * falsepositive  + 1)
+# best = np.nanargmax(critera)
+# points = ax.scatter(false_p[best] / (true_p[best] + false_p[best]) * 100 , recall[best] * 100, marker = '*', s = 100)
+
 plt.savefig(modeldir + '/Plots/proportion_curve.png') if save_figs else None
 plt.show()
+

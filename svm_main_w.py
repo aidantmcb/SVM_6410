@@ -1,8 +1,9 @@
 #################################################################################################
-########################################## svm_main.py ##########################################
-# This is the primary file for this project. 
+########################################## svm_main_w.py ##########################################
+# This is the first main file for this project. 
 # Purpose: generate SVM models to the input dataset, testing the best model hyperparameters for
 # class weights.
+# Summary plots carried out in svm_summaryplots_C.py
 
 
 ### Imports ###

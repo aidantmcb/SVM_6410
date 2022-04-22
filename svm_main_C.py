@@ -1,8 +1,9 @@
 #################################################################################################
 ########################################## svm_main_C.py ##########################################
-# This is a secondary file for this project. 
+# This is the second main file for this project. 
 # Purpose: generate SVM models to the input dataset, testing the best model hyperparameters for
 # C, the regularization parameter.
+# Summary plots carried out in svm_summaryplots_C.py
 
 
 ### Imports ###
