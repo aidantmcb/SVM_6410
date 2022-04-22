@@ -140,7 +140,6 @@ for i in range(len(yso_weights)): # iterate over model params
             cm = confusion_matrix(y_test, y_predict)
 
 
-
             ## Plot the confusion matrix ##
             if plotcm:
                 disp = ConfusionMatrixDisplay(cm, display_labels = model.classes_)
