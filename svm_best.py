@@ -1,6 +1,6 @@
 #################################################################################################
 ########################################## svm_best.py ##########################################
-# This is a secondary file for this project. 
+# This is a overview file for this project. 
 
 
 
@@ -46,7 +46,7 @@ true_p = cm[1,1] # N true postive
 false_p = cm[0,1] # N false positive
 
 
-falsepositive = fas
+falsepositive = 
 
 ####### APPLY TO SOME NEW DATA
 
