@@ -22,6 +22,7 @@ Target features (variable names with `y`) look like
 | ----- |
 | True  |
 | False |
+| True |
 | ...  |
 
 For model training, the default is to return subsets X_train, y_train, and X_test, y_test. The model is trained on X_train, y_train and evaluated on X_test, y_test.

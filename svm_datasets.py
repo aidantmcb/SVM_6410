@@ -8,6 +8,9 @@ import numpy as np
 from astropy.io import fits
 
 f6file = '/Users/aidanmcbride/Documents/Sagitta-Runaways/final6age.fits'
+f6file = 'final6age.fits'
+
+sagittafile = 'sagitta_edr3.fits'
 
 def getDataset(fname = None, colnames = ('G', 'BP', 'RP', 'J', 'H', 'K', 'PARALLAX', 'pms'), 
     traintest = ('train_set', 'test_set'), pmsthresh = 0.9, rebalance = False, sampsize = 10000):

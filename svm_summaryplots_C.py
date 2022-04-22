@@ -21,7 +21,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
-f6file = '/Users/aidanmcbride/Documents/Sagitta-Runaways/final6age.fits'
 
 X_train_sample, y_train_sample, X_test, y_test = getDataset(rebalance = False)
 
@@ -31,7 +30,6 @@ false_test = X_test[np.where(y_test == 0)[0], :]
 #######
 
 save_figs = True
-extend = True
 
 yso_weights = [0.7, 1.0, 2.0]
 regularizeCs = np.round(np.logspace(-1, 5, 20),1)
@@ -42,7 +40,7 @@ modeldir_base = 'Models/regularize_c/'
 
 for i in range(len(yso_weights)):
     weight = round(yso_weights[i],1)
-    modeldir = modeldir_base + '/w{}/'.format(str(round(weight, 1)))
+    modeldir = modeldir_base + 'w{}/'.format(str(round(weight, 1)))
 
      
     true_false = pickle.load(open(modeldir + 'truefalse_w{}.pickle'.format(str(round(weight, 1))), 'rb'))
@@ -104,9 +102,15 @@ for i in range(len(yso_weights)):
     fig.colorbar(points, label = 'log(C)')
     ax.set_title('Weight = {}'.format(str(weight)))
 
-    critera = (100 * recall) / ( 100 * falsepositive  + 1)
-    best = np.nanargmax(critera)
+    criteria = (100 * recall) / ( 100 * falsepositive  + 1)
+    best = np.nanargmax(criteria)
     points = ax.scatter(false_p[best] / (true_p[best] + false_p[best]) * 100 , recall[best] * 100, marker = '*', s = 100)
+
+    print(criteria[best])
+
+    paramC = round(regularizeCs[best], 1)
+    bestfile = modeldir + 'model_w{w}_C{c}.pickle'.format(w=str(round(weight, 1)), c = str(round(paramC, 1)))
+    print(bestfile)
 
     plt.savefig(modeldir + '/Plots/proportion_curve_w{}.png'.format(str(weight))) if save_figs else None
     plt.show()
