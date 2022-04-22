@@ -67,7 +67,7 @@ for i in range(len(yso_weights)):
     # Plot precision/recall curves, and then percentages recovered vs contam
     precision = true_p / (true_p + false_p) # What proportion of retrieved items are relevant?
     recall = true_p / (true_p + false_n) # What proportion of relevant items are retrieved?
-    falsepositive = false_p / (true_p + false_p) # What proportion of items are falsely retrieved?
+    falsepositiverate = false_p / (true_p + false_p) # What proportion of items are falsely retrieved?
 
 
     fig, axs = plt.subplots(2,1, sharex = True, gridspec_kw={'height_ratios':[2,1]})
@@ -94,15 +94,15 @@ for i in range(len(yso_weights)):
 
 
     fig, ax = plt.subplots(figsize = (8,6))
-    points = ax.scatter(falsepositive * 100 , recall * 100, c = np.log10(regularizeCs))
+    points = ax.scatter(falsepositiverate * 100 , recall * 100, c = np.log10(regularizeCs))
     ax.set_xlabel('% Contamination')
     ax.set_ylabel('% YSOs Recovered')
     xmin, xmax = ax.get_xlim()
-    ax.set_xlim(xmin, np.nanpercentile(falsepositive * 100, 95) + 5)
+    ax.set_xlim(xmin, np.nanpercentile(falsepositiverate * 100, 95) + 5)
     fig.colorbar(points, label = 'log(C)')
     ax.set_title('Weight = {}'.format(str(weight)))
 
-    criteria = (100 * recall) / ( 100 * falsepositive  + 1)
+    criteria = (100 * recall) / ( 100 * falsepositiverate  + 1)
     best = np.nanargmax(criteria)
     points = ax.scatter(false_p[best] / (true_p[best] + false_p[best]) * 100 , recall[best] * 100, marker = '*', s = 100)
 

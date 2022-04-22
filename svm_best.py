@@ -35,8 +35,8 @@ extend = True
 yso_weights = [0.7, 1.0, 2.0]
 regularizeCs = np.round(np.logspace(-1, 5, 20),1)
 
-m1 = pickle.load(open('Models/regularize_c/w0.7/model_w0.7_C143.8.pickle', 'rb'))
-y_predict = m1.predict(X_test)
+model = pickle.load(open('Models/regularize_c/w0.7/model_w0.7_C143.8.pickle', 'rb'))
+y_predict = model.predict(X_test)
 
 cm = confusion_matrix(y_test, y_predict)
 
@@ -49,18 +49,18 @@ false_p = cm[0,1] # N false positive
 
 precision = true_p / (true_p + false_p) # What proportion of retrieved items are relevant?
 recall = true_p / (true_p + false_n) # What proportion of relevant items are retrieved?
-falsepositive = false_p / (true_p + false_p) # What proportion of items are falsely retrieved?
+falsepositiverate = false_p / (true_p + false_p) # What proportion of items are falsely retrieved?
 
 print('-----------------------------------------------')
 print('Test Set Precision:', precision)
 print('Test Set Recall:', recall)
-print('Test Set False-Positive Rate:', falsepositive)
+print('Test Set False-Positive Rate:', falsepositiverate)
 print('-----------------------------------------------')
 
 ####### APPLY TO SOME NEW DATA
 
 # y here is a probability array, not a binary class
-X, y, X_EMPTY, y_EMPTY, data = getDataset(fname = 'sagitta_edr3.fits', traintest = False, 
+X, y, X_EMPTY, y_EMPTY, data = getDataset(fname = 'gaia_1mil-sagitta.fits', traintest = False, 
                 colnames = ('g', 'bp', 'rp', 'j', 'h', 'k', 'parallax', 'pms'), table = True)
 print('Input data length:', len(X))
 
@@ -81,13 +81,14 @@ false_p = cm[0,1] # N false positive
 
 precision = true_p / (true_p + false_p) # What proportion of retrieved items are relevant?
 recall = true_p / (true_p + false_n) # What proportion of relevant items are retrieved?
-falsepositive = false_p / (true_p + false_p) # What proportion of items are falsely retrieved?
+falsepositiverate = false_p / (true_p + false_p) # What proportion of items are falsely retrieved?
 
 print('-----------------------------------------------')
-print('Test Set Precision:', precision)
-print('Test Set Recall:', recall)
-print('Test Set False-Positive Rate:', falsepositive)
+print('Precision:', precision)
+print('Recall:', recall)
+print('False-Positive Rate:', falsepositiverate)
 print('-----------------------------------------------')
 
-
-
+tab = Table(data)
+tab['svm_yso'] = y_predict.astype(bool)
+tab.write('output.fits', overwrite = True)

@@ -7,8 +7,8 @@
 
 
 ### Imports ###
-from platform import java_ver
 import numpy as np 
+np.set_printoptions(suppress=True)
 from astropy.io import fits
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
@@ -47,7 +47,6 @@ yso_weights = [0.7, 1.0, 2.0] #[0.7, 1.0, 2.0] #range of yso weights
 # regularizeCs = np.arange(0.2, 4.1, 0.2)
 # regularizeCs = np.append(regularizeCs, [10, 50, 100, 500, 1000, 10000, 100000])
 regularizeCs = np.round(np.logspace(-1, 5, 20), 1)
-np.set_printoptions(suppress=True)
 
 # We're going to save the number of true negatives, false negatives, true positives, and false positives
 # per model weight to evaluate them all. Initialize empty arrays
@@ -62,10 +61,15 @@ print('TEST YSOs TRUE/FALSE:', len(true_test) / len(false_test))
 # We'll save this to one last
 
 ## File saving preferences
-modeldir_base = 'Models/regularize_c/' # when using data pms/!pms ratio
-overwrite = False # Flag in case we want to recalculate already existing models
-plotcm = True # Flag in case we want to plot or save the confusion matrix
-## REDO WITH plotcm TRUE
+
+# when using data pms/!pms ratio
+modeldir_base = 'Models/regularize_c/' 
+
+# Flag in case we want to recalculate already existing models
+overwrite = False 
+
+# Flag in case we want to plot or save the confusion matrix
+plotcm = True 
 
 ## Iterate over model weights, carry out modeling 
 for i in range(len(yso_weights)): # iterate over model params
@@ -121,13 +125,13 @@ for i in range(len(yso_weights)): # iterate over model params
 
 
 
-            ## HR Diagram
-            # fig, ax = plt.subplots(figsize = (8,6))
-            # ax.scatter(ms[:, 1] - ms[:, 2], ms[:,0], c = 'grey', alpha = 0.5)
-            # ax.scatter(yso[:, 1] - yso[:, 2], yso[:,0], c = 'k', alpha = 0.5 )
-            # ymin, ymax = ax.get_ylim()
-            # ax.set_ylim(ymax, ymin)
-            # plt.show()
+            # HR Diagram
+            fig, ax = plt.subplots(figsize = (8,6))
+            ax.scatter(ms[:, 1] - ms[:, 2], ms[:,0], c = 'grey', alpha = 0.5)
+            ax.scatter(yso[:, 1] - yso[:, 2], yso[:,0], c = 'k', alpha = 0.5 )
+            ymin, ymax = ax.get_ylim()
+            ax.set_ylim(ymax, ymin)
+            plt.show()
 
 
 
