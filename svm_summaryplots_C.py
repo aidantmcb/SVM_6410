@@ -29,7 +29,7 @@ false_test = X_test[np.where(y_test == 0)[0], :]
 
 #######
 
-save_figs = True
+save_figs = False
 
 yso_weights = [0.7, 1.0, 2.0]
 regularizeCs = np.round(np.logspace(-1, 5, 20),1)

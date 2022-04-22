@@ -13,7 +13,7 @@ f6file = 'final6age.fits'
 sagittafile = 'sagitta_edr3.fits'
 
 def getDataset(fname = None, colnames = ('G', 'BP', 'RP', 'J', 'H', 'K', 'PARALLAX', 'pms'), 
-    traintest = ('train_set', 'test_set'), pmsthresh = 0.9, rebalance = False, sampsize = 10000):
+    traintest = ('train_set', 'test_set'), pmsthresh = 0.85, rebalance = False, sampsize = 10000, table = False):
     np.random.seed(1)
     ### DATA LOADING AND CLEANUP ###
     # We need a representative set of data to feed our model, and we need it to be
@@ -63,7 +63,7 @@ def getDataset(fname = None, colnames = ('G', 'BP', 'RP', 'J', 'H', 'K', 'PARALL
     elif traintest == False:
         # Just return all data as X_train and y_train, no test set
         train = np.arange(len(data))
-        test = np.array([])
+        test = None #np.array([]).astype(int)
         sampsize = len(data) # reset sample size to all data and return
     else: 
         # Sample data for 90% train, 10% test
@@ -102,4 +102,7 @@ def getDataset(fname = None, colnames = ('G', 'BP', 'RP', 'J', 'H', 'K', 'PARALL
     X_train_sample = X_train[sample_indices, :] 
     y_train_sample = y_train[sample_indices]
 
-    return (X_train_sample, y_train_sample, X_test, y_test)
+    if table == True:
+        return (X_train_sample, y_train_sample, X_test, y_test, data[sample_indices])
+    else:
+        return (X_train_sample, y_train_sample, X_test, y_test)
