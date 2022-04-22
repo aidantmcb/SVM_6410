@@ -57,6 +57,7 @@ print('Test Set Recall:', recall)
 print('Test Set False-Positive Rate:', falsepositiverate)
 print('-----------------------------------------------')
 
+quit()
 ####### APPLY TO SOME NEW DATA
 
 # y here is a probability array, not a binary class

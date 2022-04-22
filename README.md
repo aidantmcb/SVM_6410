@@ -8,7 +8,8 @@ Model outputs: True/False flag of whether each star is a YSO.
 
 ----------
 
-Link to the main data file used for training:
+Link to the main data file used for training:https://drive.google.com/file/d/15jvnFpRoNXHUtAdJAmiLt2TkxXqHRXtY/view?usp=sharing
+
 Link to the larger data file used for final model evaluation: https://drive.google.com/file/d/1FroT_ApnPKg4sbkTp8pX_S8k0s_5MBm_/view?usp=sharing
 
 
