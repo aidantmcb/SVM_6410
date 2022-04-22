@@ -71,15 +71,15 @@ plotcm = True # Flag in case we want to plot or save the confusion matrix
 for i in range(len(yso_weights)): # iterate over model params
     weight = yso_weights[i]
 
-    true_n = np.zeros(len(regularizeCs))
+    true_n = np.zeros(len(regularizeCs)) # set up to save for true negative, false negative, true postive, false positives
     false_n = np.zeros(len(regularizeCs))
     true_p = np.zeros(len(regularizeCs))
     false_p = np.zeros(len(regularizeCs))
 
     modeldir = modeldir_base + '/w{}/'.format(str(round(weight, 1)))
 
-    with PdfPages(modeldir + 'Plots/Confusion_Regularize_w{}.pdf'.format(str(round(weight,1)))) as pdf: # if want to save to pdf
-    # with np.errstate(divide = 'ignore'): # if don't want to save to pdf
+    # with PdfPages(modeldir + 'Plots/Confusion_Regularize_w{}.pdf'.format(str(round(weight,1)))) as pdf: # if want to save to pdf
+    with np.errstate(divide = 'ignore'): # if don't want to save to pdf
 
         for j in range(len(regularizeCs)):
             paramC = regularizeCs[j]
