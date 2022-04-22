@@ -43,7 +43,10 @@ false_test = X_test[np.where(y_test == 0)[0], :]
 # of its support vector boundaries. From past experience, let's try three yso weights [0.7, 1, 2] and explore what happens when we 
 # go through the parameter space of C
 yso_weights = [0.7, 1.0, 2.0] #[0.7, 1.0, 2.0] #range of yso weights 
-regularizeCs = np.arange(0.2, 4.1, 0.2)
+# regularizeCs = np.arange(0.2, 4.1, 0.2)
+# regularizeCs = np.append(regularizeCs, [10, 50, 100, 500, 1000, 10000, 100000])
+regularizeCs = np.round(np.logspace(-1, 5, 20), 1)
+np.set_printoptions(suppress=True)
 
 # We're going to save the number of true negatives, false negatives, true positives, and false positives
 # per model weight to evaluate them all. Initialize empty arrays
@@ -118,7 +121,6 @@ for i in range(len(yso_weights)): # iterate over model params
             #                       [[true_negative, false_positive]
             #                        [false_negative, true_positive ]]
             # So, a perfect classification is a diagonal matrix.
-
             cm = confusion_matrix(y_test, y_predict)
 
             ## Plot the confusion matrix ##
@@ -134,10 +136,10 @@ for i in range(len(yso_weights)): # iterate over model params
                 else: 
                     plt.show()
 
-            true_n[i] = cm[0, 0]
-            false_n[i] = cm[1, 0]
-            true_p[i] = cm[1, 1]
-            false_p[i] = cm[0, 1]
+            true_n[j] = cm[0, 0]
+            false_n[j] = cm[1, 0]
+            true_p[j] = cm[1, 1]
+            false_p[j] = cm[0, 1]
 
         truefalse = np.array([true_n, false_n, true_p, false_p])
         if exists(modeldir + 'truefalse_w{}.pickle'.format(str(round(weight,1)))) & (not overwrite):

@@ -65,7 +65,7 @@ axs[0].plot([selectmod, selectmod], [ymin, ymax], linestyle = 'dashed')
 
 axs[0].set_ylabel('Precision & Recall')
 axs[0].legend(frameon = False, loc = 'lower right')
-axs[1].fill_between(yso_weights, true_p / len(true_test), false_p / len(true_test), color = 'blue', label = 'True PMS')
+axs[1].fill_between(yso_weights, true_p / len(true_test) + false_p / len(true_test), false_p / len(true_test), color = 'blue', label = 'True PMS')
 axs[1].fill_between(yso_weights, false_p / len(true_test), color = 'orange', label = 'False PMS')
 ymin, ymax = axs[1].get_ylim()
 axs[1].plot([selectmod, selectmod], [ymin, ymax], linestyle = 'dashed')
@@ -77,22 +77,6 @@ plt.show()
 
 
 fig, ax = plt.subplots(figsize = (8,6))
-points = ax.scatter(false_p  , true_p, c = yso_weights)
-ax.set_xlabel('False Positive')
-ax.set_ylabel('True Positive')
-fig.colorbar(points, label = 'Model PMS Weight')
-plt.show()
-
-fig, ax = plt.subplots(figsize = (8,6))
-points = ax.scatter(false_p / (true_p + false_p) * 100 , true_p , c = yso_weights)
-xmin, xmax = ax.get_xlim()
-ax.set_xlim(xmin, np.nanpercentile(false_p / (true_p + false_p) * 100, 95) + 6)
-ax.set_xlabel('% Contamination')
-ax.set_ylabel('True Positive')
-fig.colorbar(points, label = 'Model PMS Weight')
-plt.show()
-
-fig, ax = plt.subplots(figsize = (8,6))
 points = ax.scatter(false_p / (true_p + false_p) * 100 , true_p / len(true_test) * 100, c = yso_weights)
 ax.set_xlabel('% Contamination')
 ax.set_ylabel('% YSOs Recovered')
@@ -100,5 +84,5 @@ xmin, xmax = ax.get_xlim()
 ax.set_xlim(xmin, np.nanpercentile(false_p / (true_p + false_p) * 100, 95) + 6)
 # print(np.sort(false_p / (true_p + false_p) * 100))
 fig.colorbar(points, label = 'Model PMS Weight')
-plt.savefig(modeldir + '/Plots/PR_Classified.png') if save_figs else None
+plt.savefig(modeldir + '/Plots/proportion_curve.png') if save_figs else None
 plt.show()
